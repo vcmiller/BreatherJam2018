@@ -14,7 +14,7 @@ public class MeshDeformer : MonoBehaviour {
     float uniformScale { get { return transform.localScale.x; } }
 
 	void Start () {
-		deformingMesh = GetComponent<MeshFilter>().mesh;
+		deformingMesh = GetComponent<MeshFilter>().sharedMesh;
 		originalVertices = deformingMesh.vertices;
 		displacedVertices = new Vector3[originalVertices.Length];
 		for (int i = 0; i < originalVertices.Length; i++) {
@@ -29,6 +29,8 @@ public class MeshDeformer : MonoBehaviour {
 		}
 		deformingMesh.vertices = displacedVertices;
 		deformingMesh.RecalculateNormals();
+
+        GetComponent<MeshCollider>().sharedMesh = deformingMesh;
 	}
 
 	void UpdateVertex (int i) {

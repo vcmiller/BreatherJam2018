@@ -10,7 +10,7 @@ public class CubeSphere : MonoBehaviour {
 	private Mesh mesh;
 	private Vector3[] vertices;
 	private Vector3[] normals;
-	private Color32[] cubeUV;
+	private Vector2[] uv;
 
     private MeshCollider meshcol;
 
@@ -19,7 +19,7 @@ public class CubeSphere : MonoBehaviour {
 	}
 
 	private void Generate () {
-		GetComponent<MeshFilter>().mesh = mesh = new Mesh();
+		GetComponent<MeshFilter>().sharedMesh = mesh = new Mesh();
 		mesh.name = "Procedural Sphere";
 		CreateVertices();
 		CreateTriangles();
@@ -35,7 +35,7 @@ public class CubeSphere : MonoBehaviour {
 			(gridSize - 1) * (gridSize - 1)) * 2;
 		vertices = new Vector3[cornerVertices + edgeVertices + faceVertices];
 		normals = new Vector3[vertices.Length];
-		cubeUV = new Color32[vertices.Length];
+		uv = new Vector2[vertices.Length];
 
 		int v = 0;
 		for (int y = 0; y <= gridSize; y++) {
@@ -65,7 +65,9 @@ public class CubeSphere : MonoBehaviour {
 
 		mesh.vertices = vertices;
 		mesh.normals = normals;
-		mesh.colors32 = cubeUV;
+        mesh.uv = uv;
+
+        mesh.RecalculateTangents();
 	}
 
 	private void SetVertex (int i, int x, int y, int z) {
@@ -79,7 +81,18 @@ public class CubeSphere : MonoBehaviour {
 		s.z = v.z * Mathf.Sqrt(1f - x2 / 2f - y2 / 2f + x2 * y2 / 3f);
 		normals[i] = s;
 		vertices[i] = normals[i] * radius;
-		cubeUV[i] = new Color32((byte)x, (byte)y, (byte)z, 0);
+
+        float ax = Mathf.Abs(s.x);
+        float ay = Mathf.Abs(s.y);
+        float az = Mathf.Abs(s.z);
+
+        if (ax >= ay && ax >= az) {
+            uv[i] = new Vector2(z, y);
+        } else if (ay >= ax && ay >= az) {
+            uv[i] = new Vector2(x, z);
+        } else {
+            uv[i] = new Vector2(x, y);
+        }
 	}
 
 	private void CreateTriangles () {
