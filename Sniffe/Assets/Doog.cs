@@ -5,10 +5,12 @@ using UnityEngine;
 public class Doog : MonoBehaviour {
 
     [Header("Keys")]
-    public KeyCode up;
-    public KeyCode left;
-    public KeyCode down;
-    public KeyCode right;
+    //public KeyCode up;
+    //public KeyCode left;
+    //public KeyCode down;
+    //public KeyCode right;
+    public string horizontal = "Horizontal";
+    public string vertical = "Vertical";
 
     [Header("Vals")]
     public float speeeed;
@@ -18,15 +20,11 @@ public class Doog : MonoBehaviour {
     public Rigidbody2D rb;
     public Rigidbody2D piceofeboi;
     public Rigidbody2D tale;
-
-    // Use this for initialization
-    void Start () {
-		
-	}
+    public List<Joint2D> boyeparts; 
 	
 	// Update is called once per frame
 	void Update () {
-        Vector2 input = new Vector2(GetKey(right) - GetKey(left), GetKey(up) - GetKey(down));
+        Vector2 input = new Vector2(Input.GetAxis(horizontal), Input.GetAxis(vertical));
 
         rb.velocity = Vector2.MoveTowards(rb.velocity, input.normalized * speeeed, handling * Time.deltaTime);//, Vector2.up, ForceMode2D.Force);
         if (rb.velocity != Vector2.zero)
@@ -49,9 +47,24 @@ public class Doog : MonoBehaviour {
 
     public void E_X_T_E_N_D()
     {
+        if (boyeparts == null) return;
+
+        if (boyeparts.Count >= 5)
+        {
+            foreach (Doog d in FindObjectsOfType<Doog>())
+            {
+                if (this != d)
+                {
+                    d.tale.GetComponentInChildren<tale>().FuckinDie();
+                }
+            }
+            return;
+        }
+
         tale.position -= (Vector2) tale.transform.up;
         tale.velocity = -tale.transform.up;
         speeeed += 5;
+        handling += 5;
 
         Joint2D joint = GetComponent<Joint2D>();
         while (joint.connectedBody != tale)
@@ -61,5 +74,7 @@ public class Doog : MonoBehaviour {
         Rigidbody2D reeb = Instantiate(piceofeboi, joint.transform.position - joint.transform.up / 2, Quaternion.identity);
         joint.connectedBody = reeb;
         reeb.GetComponent<Joint2D>().connectedBody = tale;
+
+        boyeparts.Add(reeb.GetComponent<Joint2D>());
     }
 }

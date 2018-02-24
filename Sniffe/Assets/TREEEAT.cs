@@ -9,7 +9,8 @@ public class TREEEAT : MonoBehaviour {
         Doog doog;
         if (doog = collision.GetComponent<Doog>())
         {
-            FindObjectOfType<SpawnTreats>().ResetTim();
+            if (null == doog.boyeparts) return;
+            //FindObjectOfType<SpawnTreats>().ResetTim();
             doog.E_X_T_E_N_D();
             Destroy(gameObject);
         }
