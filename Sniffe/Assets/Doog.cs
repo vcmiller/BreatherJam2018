@@ -38,7 +38,9 @@ public class Doog : MonoBehaviour {
         {
             E_X_T_E_N_D();
         }
-	}
+
+        tale.transform.Rotate(Vector3.up * Time.deltaTime * 420 * rb.velocity.magnitude);
+    }
 
     int GetKey(KeyCode code)
     {
