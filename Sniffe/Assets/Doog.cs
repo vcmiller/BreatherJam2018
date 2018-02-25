@@ -49,7 +49,7 @@ public class Doog : MonoBehaviour {
     {
         if (boyeparts == null) return;
 
-        if (boyeparts.Count >= 5)
+        if (boyeparts.Count >= 20)
         {
             foreach (Doog d in FindObjectsOfType<Doog>())
             {

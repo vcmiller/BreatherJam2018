@@ -27,7 +27,7 @@ public class ScoreManager : DontStop {
     {
         foreach(var key in scores.Keys)
         {
-            if(scores[key] > 0.9f)
+            if(scores[key] > 6.9f)
             {
                 winText.text = System.String.Format("Player {0} Wins!", Regex.Match(key, @"\d+").Value);
                 winText.color = Color.white;
